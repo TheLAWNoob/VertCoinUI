@@ -1,5 +1,7 @@
 # VertCoinUI
 
-Open vtc.bat to strat VertCoin Daemon, required for the functionalities of the Web Wallet interface.
+Open sample.html to see the interface without wallet info.
 
-Open index.html to access the Web Wallet.
+To have it fully working, download Electron. 
+Open vtc.bat to start VertCoin Daemon, required for the functionalities of the Web Wallet interface.
+Then open up electron and drag main.js into it.
