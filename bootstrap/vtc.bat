@@ -1,0 +1,1 @@
+vertcoin-qt.exe -server=1 -rpcuser=0 -rpcpassword=1 -rpcport=9332 -rpcallowip=127.0.0.1

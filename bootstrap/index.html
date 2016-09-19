@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<meta http-equiv="refresh" content="900">
+	
+    <title id="price">Vertcoin Wallet</title>
+	
+	<!-- jQuery -->
+    <!--script src="js/jquery.js"></script-->
+	<script>
+		window.jQuery = window.$ = require('./js/jquery');
+	</script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- High Charts JavaScript -->
+	<script src="http://code.highcharts.com/stock/highstock.js"></script>
+
+	<!-- Bitcoin NodeJs RPC -->
+	<script src='./renderer.js'></script>
+	
+	<script>
+		var tick = 0
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.onreadystatechange = function() { 
+			if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+				var myArr = JSON.parse(xmlHttp.responseText)
+				//console.log(myArr.BTC_VTC.last)
+				tick = myArr.BTC_VTC.last
+				document.getElementById("price").innerHTML = "VTC @ " + tick + " BTC"
+			}
+		}
+		xmlHttp.open("GET", "http://poloniex.com/public?command=returnTicker", true); // true for asynchronous 
+		xmlHttp.send(null);
+	
+		$(function () {
+			$.getJSON('https://poloniex.com/public?command=returnChartData&currencyPair=BTC_VTC&start=1410099200&end=9999999999&period=14400', function (data) {
+				var ar2 = new Array()
+				for (x in data) {
+					ar2.push([data[x].date * 1000, data[x].weightedAverage])
+				}
+				//console.log(ar2)
+				// Create the chart
+				$('#container').highcharts('StockChart', {
+					rangeSelector : {
+						selected : 1
+					},
+
+					title : {
+						text : 'Current Price: ' + tick + ' BTC'
+					},
+					
+					series : [{
+						name : 'AAPL',
+						data : ar2,
+						tooltip: {
+							valueDecimals: 8
+						}
+					}]
+				});
+			});
+		});
+	</script>
+	
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Flowing Water Vertcoin Wallet UI</a>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-right top-nav">
+			<button onclick="runvtc()" class="btn btn-default">
+					Launch Vertcoind
+			</button>
+			<a class="btn btn-default night" href="javascript:!function(d){d.head.appendChild(d.createElement('style')).innerText=
+				'html,img,video{-webkit-filter:invert(1)hue-rotate(-0deg);
+				filter:invert(1)hue-rotate(-0deg)}body{background:#000}'}(document);"> Night mode </a>
+			<a class="btn btn-default day" href="javascript:!function(d){d.head.appendChild(d.createElement('style')).innerText=
+				'html,img,video{-webkit-filter:invert(0)hue-rotate(0deg);
+				filter:invert(0)hue-rotate(0deg)}body{background:#000}'}(document);"> Day mode </a>
+                <!--li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
+                    <ul class="dropdown-menu message-dropdown">
+                        <li class="message-preview">
+                            <a href="#">
+                                <div class="media">
+                                    <span class="pull-left">
+                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
+                                    </span>
+                                    <div class="media-body">
+                                        <h5 class="media-heading"><strong>John Smith</strong>
+                                        </h5>
+                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="message-footer">
+                            <a href="#">Read All New Messages</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+                    <ul class="dropdown-menu alert-dropdown">
+                        <li>
+                            <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">View All</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        </li>
+                    </ul>
+                </li-->
+            </ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li class="active">
+                        <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="trans.html"><i class="fa fa-fw fa-bar-chart-o"></i> Transactions</a>
+                    </li>
+                    <li>
+                        <a href="forms.html"><i class="fa fa-fw fa-edit"></i> Forms</a>
+                    </li>
+                    <li>
+                        <a href="add.html"><i class="fa fa-fw fa-edit"></i> Addresses</a>
+                    </li>
+                    <li>
+                        <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper">
+
+            <div class="container-fluid">
+				
+                <div class="row">
+                    <div class="col-lg-4">
+                        <h1 class="page-header" id="ntol">
+                            Is vertcoind running?
+                        </h1>
+                    </div>
+                    <div class="col-lg-4">
+                        <h1 class="page-header" id="nvtc">
+                            Usable: 
+                        </h1>
+                    </div>
+                    <div class="col-lg-4">
+                        <h1 class="page-header" id="ntmp">
+                            On Hold: 
+                        </h1>
+                    </div>
+                </div>
+                <!-- /.row -->
+				
+				<div class="row">
+                    <div class="col-lg-3">
+                        <h2 id="diff">
+                            Is vertcoind running?
+                        </h2>
+                    </div>
+                    <div class="col-lg-3">
+                        <h2 id="bloc">
+                            Blocks:
+                        </h2>
+                    </div>
+                    <div class="col-lg-3">
+                        <h2 id="hash">
+                            Net Hash:
+                        </h2>
+                    </div>
+                    <div class="col-lg-3">
+                        <h2 id="peer">
+                            Peers:
+                        </h2>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> VTC to BTC Rates</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Recent Recieved</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Time</th>
+                                                <th>Amount</th>
+                                                <th>Address</th>
+                                                <th>Checks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td id="rtim1">Is vertcoind running?</td>
+                                                <td id="ramt1">$3.50</td>
+                                                <td id="radd1">uranus</td>
+                                                <td id="rchk1">42</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="rtim2">Is vertcoind running?</td>
+                                                <td id="ramt2">$3.50</td>
+                                                <td id="radd2">uranus</td>
+                                                <td id="rchk2">42</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="rtim3">Is vertcoind running?</td>
+                                                <td id="ramt3">$3.50</td>
+                                                <td id="radd3">uranus</td>
+                                                <td id="rchk3">42</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-right">
+                                    <a href="tables.html">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Recent Sent</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Time</th>
+                                                <th>Amount</th>
+                                                <th>Address</th>
+                                                <th>Checks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td id="stim1">Is vertcoind running?</td>
+                                                <td id="samt1">$3.50</td>
+                                                <td id="sadd1">uranus</td>
+                                                <td id="schk1">42</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="stim2">Is vertcoind running?</td>
+                                                <td id="samt2">$3.50</td>
+                                                <td id="sadd2">uranus</td>
+                                                <td id="schk2">42</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="stim3">Is vertcoind running?</td>
+                                                <td id="samt3">$3.50</td>
+                                                <td id="sadd3">uranus</td>
+                                                <td id="schk3">42</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-right">
+                                    <a href="tables.html">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->	
+
+</body>
+
+</html>
