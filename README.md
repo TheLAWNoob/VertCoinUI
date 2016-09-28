@@ -1,5 +1,7 @@
 # VertCoinUI
 
+Alternative UI for Vertcoin Wallet
+
 Open sample.html to see the interface without wallet info. Bootstrap components required.
 
 To have it fully working, download Electron. 
